@@ -9,7 +9,7 @@ const getters = {
 }
 
 const actions = {
-    async fetchTodos({ commit }){
+    async fetchTodos({ commit }) {
         const response = await axios.get('https://jsonplaceholder.typicode.com/todos')
         commit('setTodos', response.data)
         console.log('response', response.data)
@@ -22,13 +22,26 @@ const actions = {
     async deleteTodo({ commit }, id) {
         await axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
         commit('removeTodo', id)
-    }
+    },
+    // get selected number
+    async filterTodos({ commit }, e) {
+        // console.log('commit', commit)
+        const limit = parseInt(e.target.options[e.target.options.selectedIndex].innerText)
+        // console.log('limit', limit)
+        // console.log('e', e)
+        const response = await axios.get(
+            `https://jsonplaceholder.typicode.com/todos?_limit=${limit}`
+          );
+      
+          commit('setTodos', response.data);
+    },
+    
 }
 
 const mutations = {
     setTodos: (state, todos) => (state.todos = todos),
     newTodo: (state, todo) => state.todos.unshift(todo), // time 32:10
-    removeTodo: (state, id) => state.todos = state.todos.filter(todo => todo.id !== id) // time 39:01
+    removeTodo: (state, id) => state.todos = state.todos.filter(todo => todo.id !== id), // time 39:01
 }
 
 export default {
